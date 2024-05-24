@@ -1,0 +1,2 @@
+// const BASE_URL = `https://newsapi.org/v2/everything?domains=wsj.com&apiKey=${import.meta.env.VITE_APIKEY}`;
+const BASE_URL = "https://newsapi.org/v2/everything?domains=wsj.com&apiKey=f155828983ca468b8f89d7f6921b732b"
