@@ -3,14 +3,12 @@ import axios from "axios";
 import { onMounted, ref } from "vue";
 import { INews } from "../models/INews.ts";
 
-const APIKEYNEWS = import.meta.env.VITE_API_KEY_NEWS;
-
 const news = ref<INews[]>([]);
 
 const fetchNews = async () => {
   try {
     const response = await axios.get<{ articles: INews[] }>(
-      `https://newsapi.org/v2/everything?domains=techcrunch.com&apiKey=${APIKEYNEWS}`
+      "https://newsapi.org/v2/everything?domains=techcrunch.com&apiKey=f155828983ca468b8f89d7f6921b732b"
     );
     news.value = response.data.articles;
     console.log(response.data.articles);
