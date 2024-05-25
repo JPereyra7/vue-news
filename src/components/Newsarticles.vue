@@ -11,7 +11,8 @@ const fetchNews = async () => {
     const response = await axios.get<{ posts: INews[] }>(
         // Koppla till mitt API
     //   `https://api.webz.io/newsApiLite?token=${APIKEYNEWS}&q=Bitcoin&category=economy, business and finance`
-    "http://localhost:3000/api/news"
+    // "http://localhost:3000/api/news"
+    "https://bright-daifuku-ba23da.netlify.app/.netlify/functions/getNews"
     );
     news.value = response.data.posts;
     console.log(response.data.posts);
