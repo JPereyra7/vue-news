@@ -11,6 +11,6 @@ Frontend:
 
 Backend:
 
-[![My Skills](https://skillicons.dev/icons?i=js,express,node,netlify)](https://skillicons.dev)
+[![My Skills](https://skillicons.dev/icons?i=js,express,nodejs,netlify)](https://skillicons.dev)
 
 Backend Repo: https://github.com/JPereyra7/vue-news-backend
