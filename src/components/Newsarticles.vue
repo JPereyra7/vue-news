@@ -9,7 +9,9 @@ const APIKEYNEWS = import.meta.env.VITE_API_KEY_NEWS
 const fetchNews = async () => {
   try {
     const response = await axios.get<{ posts: INews[] }>(
-      `https://api.webz.io/newsApiLite?token=${APIKEYNEWS}&q=Bitcoin&category=economy, business and finance`
+        // Koppla till mitt API
+    //   `https://api.webz.io/newsApiLite?token=${APIKEYNEWS}&q=Bitcoin&category=economy, business and finance`
+    "http://localhost:3000/api/news"
     );
     news.value = response.data.posts;
     console.log(response.data.posts);
