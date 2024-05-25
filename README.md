@@ -7,7 +7,7 @@ url 🔗: https://6651efdce551d900084f9d27--vue-news-joel.netlify.app/
 
 Frontend:
 
-[![My Skills](https://skillicons.dev/icons?i=js,html,css,vue)](https://skillicons.dev)
+[![My Skills](https://skillicons.dev/icons?i=vue,ts,vite,css)](https://skillicons.dev)
 
 Backend:
 
