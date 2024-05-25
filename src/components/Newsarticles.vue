@@ -4,7 +4,7 @@ import { onMounted, ref } from "vue";
 import { INews } from "../models/INews.ts";
 
 const news = ref<INews[]>([]);
-const APIKEYNEWS = import.meta.env.VITE_API_KEY_NEWS
+// const APIKEYNEWS = import.meta.env.VITE_API_KEY_NEWS
 
 const fetchNews = async () => {
   try {
