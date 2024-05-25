@@ -4,14 +4,15 @@ import { onMounted, ref } from "vue";
 import { INews } from "../models/INews.ts";
 
 const news = ref<INews[]>([]);
+const APIKEYNEWS = import.meta.env.VITE_API_KEY_NEWS
 
 const fetchNews = async () => {
   try {
-    const response = await axios.get<{ articles: INews[] }>(
-      "https://newsapi.org/v2/everything?domains=techcrunch.com&apiKey=f155828983ca468b8f89d7f6921b732b"
+    const response = await axios.get<{ posts: INews[] }>(
+      `https://api.webz.io/newsApiLite?token=${APIKEYNEWS}&q=Bitcoin&category=economy, business and finance`
     );
-    news.value = response.data.articles;
-    console.log(response.data.articles);
+    news.value = response.data.posts;
+    console.log(response.data.posts);
   } catch (e) {
     console.error("Could not fetch news");
   }
@@ -21,49 +22,48 @@ const clickedArticle = (articleUrl: string) => {
   window.open(articleUrl, "_blank");
 };
 
+const handleImageError = (event: Event) => {
+  console.error("Image failed to load:", (event.target as HTMLImageElement).src);
+};
+
 onMounted(fetchNews);
 </script>
 
 <template>
-  <div class="newsContainer">
-    <div v-if="news.length === 0">Loading...</div>
-    <div v-else>
-      <div class="big-article" v-if="news.length > 0">
-        <div
-          class="article"
-          :key="news[0].url"
-          @click="clickedArticle(news[0].url)"
-        >
-          <h1 class="articleTitleArticles">{{ news[0].title }}</h1>
-          <p class="pDescription">{{ news[0].description }}</p>
-          <img
-            :src="news[0].urlToImage"
-            alt="Article Image"
-            v-if="news[0].urlToImage"
-          />
-          <a class="readMoreText" :href="news[0].url" target="_blank">Read more</a>
+    <div class="newsContainer">
+      <div v-if="news.length === 0">Loading...</div>
+      <div v-else>
+        <div class="big-article" v-if="news.length > 0">
+          <div class="article" :key="news[0].url" @click="clickedArticle(news[0].url)">
+            <h1 class="articleTitleArticles">{{ news[0].title }}</h1>
+            <p class="pDescription">{{ news[0].description }}</p>
+            <img
+              :src="news[0].thread.main_image"
+              alt="Article Image"
+              v-if="news[0].thread.main_image"
+              class="bigImage"
+              @error="handleImageError"
+            />
+            <a class="readMoreText" :href="news[0].url" target="_blank">Read more</a>
+          </div>
         </div>
-      </div>
-      <div class="article-grid" v-if="news.length > 1">
-        <div
-          v-for="article in news.slice(1)"
-          :key="article.url"
-          class="article"
-          @click="clickedArticle(article.url)"
-        >
-          <h3 class="articleTitleArticles">{{ article.title }}</h3>
-          <p class="pDescription">{{ article.description }}</p>
-          <img
-            :src="article.urlToImage"
-            alt="Article Image"
-            v-if="article.urlToImage"
-          />
-          <a class="readMoreText" :href="article.url" target="_blank">Read more</a>
+        <div class="article-grid" v-if="news.length > 1">
+          <div v-for="article in news.slice(1)" :key="article.url" class="article" @click="clickedArticle(article.url)">
+            <h3 class="articleTitleArticles">{{ article.title }}</h3>
+            <p class="pDescription">{{ article.description }}</p>
+            <img
+              :src="article.thread.main_image" 
+              alt="Article Image"
+              v-if="article.thread.main_image" 
+              @error="handleImageError"
+            />
+            <a class="readMoreText" :href="article.url" target="_blank">Read more</a>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</template>
+  </template>
+  
 
 <style scoped>
 .newsContainer {
@@ -88,7 +88,7 @@ onMounted(fetchNews);
 }
 
 img {
-  width: 50%;
+  width: 45%;
   cursor: pointer;
 }
 
@@ -128,6 +128,10 @@ img:hover {
   margin-bottom: 1.3em;
 }
 
+.bigImage {
+    width: 25%;
+}
+
 .readMoreText {
     color: black;
     font-family: Poppins, sans-serif;
@@ -137,7 +141,7 @@ img:hover {
 
 @media (max-width: 768px) {
   .big-article {
-    width: 50%;
+    width: 100%;
   }
   .article-grid {
     grid-template-columns: repeat(1, 1fr);
@@ -156,10 +160,17 @@ img:hover {
   }
   .big-article {
     max-width: 100%;
-    display: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     /* margin-left: 5em; */
     font-size: 1em;
   }
+
+  .bigImage {
+    width: 100%;
+  }
+
   .articleTitleArticles {
     max-width: 100%;
     font-size: 1.3em;
