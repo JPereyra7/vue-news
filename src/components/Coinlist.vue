@@ -2,6 +2,8 @@
 import axios from "axios";
 import { ref, onMounted } from "vue";
 
+const APIKEYCOINS = import.meta.env.VITE_API_KEY_COINS;
+
 interface ICoinPrice {
   usd: number;
   usd_market_cap: number;
@@ -14,10 +16,23 @@ const coinAbbreviations: Record<string, string> = {
   bitcoin: "BTC",
   ethereum: "ETH",
   binancecoin: "BNB",
-  dogecoin: "DOGE",
+  tether: "USDT",
   cardano: "ADA",
-  shiba: "SHIB",
+  ripple: "XRP",
+  solana: "SOL",
   polkadot: "DOT",
+  dogecoin: "DOGE",
+  usd_coin: "USDC",
+  terra_luna: "LUNA",
+  avalanche: "AVAX",
+  shiba_inu: "SHIB",
+  polygon: "MATIC",
+  litecoin: "LTC",
+  chainlink: "LINK",
+  uniswap: "UNI",
+  algorand: "ALGO",
+  stellar: "XLM",
+  vechain: "VET",
 }
 
 const coinPrices = ref<Record<string, ICoinPrice>>({});
@@ -29,43 +44,54 @@ const roundPercentage = (percentage: number): string => {
 const fetchCoinPrices = async () => {
   try {
     const response = await axios.get(
-  "https://api.coingecko.com/api/v3/simple/price",
-  {
-    params: {
-      ids: "bitcoin,ethereum,binancecoin,dogecoin,cardano,shiba,polkadot",
-      vs_currencies: "usd",
-      include_24hr_change: true,
+      "https://api.coingecko.com/api/v3/simple/price",
+      {
+        params: {
+          ids: Object.keys(coinAbbreviations).join(","),
+          vs_currencies: "usd",
+          include_24hr_change: true,
           include_last_updated_at: false,
-    },
-  }
-);
+        },
+        headers: {
+          Authorization: `Bearer ${APIKEYCOINS}`,
+        },
+      }
+    );
     coinPrices.value = response.data;
     console.log(response.data);
   } catch (error) {
     console.error("Error fetching coin prices:", error);
   }
 };
-
-onMounted(fetchCoinPrices);
+onMounted(() => {
+  fetchCoinPrices();
+})
 </script>
 
 <template>
-  <div>
+  <div class="scrolling-wrapper">
     <div v-if="Object.keys(coinPrices).length === 0">Loading...</div>
-    <div v-else class="coin-prices">
-      <div v-for="(price, coinId) in coinPrices" :key="coinId" class="coin-price">
-        <h3 class="cryptoNames">{{ coinAbbreviations[coinId] }}</h3>
-        <p class="cryptoPrice">${{ price.usd }}</p>
-        <p :class="{ 'green': price.usd_24h_change >= 0, 'red': price.usd_24h_change < 0 }">{{ roundPercentage(price.usd_24h_change) }}%</p>
+    <div v-else class="coin-prices-wrapper">
+      <div class="coin-prices">
+        <div v-for="(price, coinId) in coinPrices" :key="coinId + '-1'" class="coin-price">
+          <h3 class="cryptoNames">{{ coinAbbreviations[coinId] }}</h3>
+          <p class="cryptoPrice">${{ price.usd }}</p>
+          <p :class="{ 'green': price.usd_24h_change >= 0, 'red': price.usd_24h_change < 0 }">{{ roundPercentage(price.usd_24h_change) }}%</p>
+        </div>
+        <div v-for="(price, coinId) in coinPrices" :key="coinId + '-2'" class="coin-price">
+          <h3 class="cryptoNames">{{ coinAbbreviations[coinId] }}</h3>
+          <p class="cryptoPrice">${{ price.usd }}</p>
+          <p :class="{ 'green': price.usd_24h_change >= 0, 'red': price.usd_24h_change < 0 }">{{ roundPercentage(price.usd_24h_change) }}%</p>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped>
 
+<style scoped>
 .cryptoNames {
-  font-size: .8rem;
+  font-size: 0.8rem;
   font-weight: 500;
   font-family: "Poppins", sans-serif;
 }
@@ -76,7 +102,7 @@ onMounted(fetchCoinPrices);
 }
 
 .cryptoPrice {
-  font-size: .875rem;
+  font-size: 0.875rem;
   font-weight: 600;
   font-family: "Poppins", sans-serif;
 }
@@ -87,25 +113,24 @@ onMounted(fetchCoinPrices);
 }
 
 .cryptoPercentages {
-  /* font-size: .6rem; */
-  font-weight: 00;
+  font-weight: 500;
   font-family: "Poppins", sans-serif;
 }
 
 .coin-prices {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
-  justify-content: center;
-  border-bottom: 1px solid rgba(44, 44, 44, 0.13);
   gap: 1em;
+  animation: scroll 40s linear infinite;
+  background-color: rgba(52, 217, 246, 0.033);
+  border-bottom: 1px solid rgba(44, 44, 44, 0.13);
 }
 
 .coin-price {
   display: flex;
   margin: 10px;
   padding: 10px;
-  display: flex; 
   flex-direction: row;
   align-items: center;
   justify-content: center;
@@ -123,13 +148,35 @@ onMounted(fetchCoinPrices);
 .green {
   color: rgb(27, 175, 27);
   font-family: "Poppins", sans-serif;
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
 
 .red {
   color: rgb(207, 0, 0);
   font-family: "Poppins", sans-serif;
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
 
+.scrolling-wrapper {
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-25%);
+  }
+}
+
+@media (max-width: 768px) {
+  .scrolling-wrapper {
+  display: flex;
+  overflow: hidden;
+  max-width: 100%;
+}
+}
 </style>
