@@ -42,7 +42,7 @@ return weather.value ? Math.round(weather.value.main.temp) : null;
         <template v-if="weather">
           <h3>{{ city }}: {{ mathRounded }}°C</h3>
           <img
-            :src="`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`"
+            :src="`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`"
             alt="Weather icon"
           />
         </template>
