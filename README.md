@@ -1,7 +1,7 @@
 # MEVN news app + api calls (weather api + crypto)
 ![Screenshots](https://github.com/JPereyra7/vue-news/blob/main/src/assets/sitescrnsh.png?raw=true)
 
-url 🔗: https://6651efdce551d900084f9d27--vue-news-joel.netlify.app/
+url 🔗: https://vue-news-joel.netlify.app
 
 || Tech Stack ||
 
